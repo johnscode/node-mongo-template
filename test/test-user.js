@@ -10,7 +10,7 @@ const debug = require('debug')('vchat-test');
 const request = require('supertest');
 const assert = require('assert');
 const userutil = require('./userutil');
-const User = require('../models/user');
+const User = require('../models/usermongo');
 
 describe('user model,',function() {
 

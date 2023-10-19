@@ -10,6 +10,7 @@ const uuid = require('uuid');
 const _ = require('lodash');
 
 const bcrypt = require('bcrypt');
+const {Sequelize} = require("sequelize");
 const saltRounds = 10;
 
 const options = {
@@ -51,29 +52,19 @@ var userSchema = new mongoose.Schema({
 	lastLogin : { type: Date },
 }, {
   // methods: {
-  //   setPassword(unencrypted) {
-  //     this.encryptedPass = bcrypt.hashSync(unencrypted,saltRounds);
-  //     return this;
-  //   }
+
   // }
 });
 
 userSchema.pre('update', function(next) {
-//	this.update({},{ $set: { updatedAt: new Date() } });
-//	console.log('user will update: ');
 	this.updatedAt=new Date();
-//	console.log('user before update: ');
 	next();
 });
 userSchema.pre('save', function(next) {
-	// if (!this.passEncrypted && this.encryptedPass) {
-	// 	logger.debug("encrypting '"+this.encryptedPass+"' for "+this.email);
-	// 	this.encryptedPass = bcrypt.hashSync(this.encryptedPass,saltRounds);
-	// 	this.passEncrypted=true;
-	// }
-	// if (!this.userId) {
-	// 	this.userId=uuid.v4();
-	// }
+	if (!this.passEncrypted && this.encryptedPass) {
+		this.encryptedPass = bcrypt.hashSync(this.encryptedPass,saltRounds);
+		this.passEncrypted=true;
+	}
 	if (!this.apikey) {
 		this.apikey=uuid.v4();
 	}
@@ -129,6 +120,10 @@ module.exports.findByUsername = async (username) => {
 	return UserModel.findOne({'username':username})
 }
 
+module.exports.findByApiKey = async (key) => {
+	return UserModel.findOne({'apikey':key})
+}
+
 module.exports.disconnect = async () => {
 	return await mongoose.disconnect()
 }
@@ -136,25 +131,5 @@ module.exports.disconnect = async () => {
 handleConnectError = function(err) {
   logger.error(`error connecting ${err}`)
 }
-
-// module.exports.findByUserId = function(uid) {
-//   return UserModel.findOne({'user_id':uid});
-// };
-//
-// module.exports.findByEmailOrUsername = function(emailOrUsername) {
-// 	logger.info("find user: "+emailOrUsername);
-// 	return UserModel.findOne({$or:[{'email':emailOrUsername},{'username':emailOrUsername}]});
-// };
-//
-// //callback is func(err,adminUser)
-// var getAdminUserFunc = function(cb) {
-// 	return UserModel.findOne({'email':'admin@johnjfowler.com'});
-// };
-// module.exports.getAdminUser = getAdminUserFunc;
-//
-// module.exports.findByAuthToken = function(token,cb) {
-// //logger.info("find user by authtoken: "+token);
-// 	return UserModel.findOne({'authToken':token});
-// };
 
 

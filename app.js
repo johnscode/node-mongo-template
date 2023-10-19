@@ -11,8 +11,10 @@ var morgan = require('morgan');
 const compression = require('compression');
 const logger = require('./logger');
 const userSessionTrack = require('./middleware/userSessionTrack');
+const sessionParser = require('./middleware/sessionParser')
 
 var indexRouter = require('./routes/index');
+var authRouter = require('./routes/auth');
 var usersRouter = require('./routes/users');
 
 var app = express();
@@ -35,7 +37,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use(useragent.express());
 app.use(favicon(path.join(__dirname, 'public/images', 'favicon.png')));
 
-app.use(userSessionTrack.sessionParser);
+app.use(sessionParser.sessionParser);
 //default response headers
 app.all('*', function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -44,11 +46,18 @@ app.all('*', function(req, res, next) {
   res.header("X-Powered-By", 'world\'s luckiest developer');
   next();
 });
-// our user session tracking
-app.all('*',userSessionTrack.findSessionUser);
 
-app.use('/', indexRouter);
+app.use('/auth', authRouter);
+
+// our auth/user session tracking middleware
+app.use('/',userSessionTrack.findSessionUser);
+
 app.use('/users', usersRouter);
+app.use('/', indexRouter);
+
+var route, routes = [];
+
+app._router.stack.forEach(print.bind(null, []))
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -67,3 +76,31 @@ app.use(function(err, req, res, next) {
 });
 
 module.exports = app;
+
+function print (path, layer) {
+  if (layer.route) {
+    layer.route.stack.forEach(print.bind(null, path.concat(split(layer.route.path))))
+  } else if (layer.name === 'router' && layer.handle.stack) {
+    layer.handle.stack.forEach(print.bind(null, path.concat(split(layer.regexp))))
+  } else if (layer.method) {
+    console.log('%s /%s',
+        layer.method.toUpperCase(),
+        path.concat(split(layer.regexp)).filter(Boolean).join('/'))
+  }
+}
+
+function split (thing) {
+  if (typeof thing === 'string') {
+    return thing.split('/')
+  } else if (thing.fast_slash) {
+    return ''
+  } else {
+    var match = thing.toString()
+        .replace('\\/?', '')
+        .replace('(?=\\/|$)', '$')
+        .match(/^\/\^((?:\\[.*+?^${}()|[\]\\\/]|[^.*+?^${}()|[\]\\\/])*)\$\//)
+    return match
+        ? match[1].replace(/\\(.)/g, '$1').split('/')
+        : '<complex:' + thing.toString() + '>'
+  }
+}

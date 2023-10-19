@@ -6,11 +6,11 @@ var app = require('./app');
 var debug = require('debug')('nodeapp:server');
 var http = require('http');
 const config = require('./config/config');
+const user = require('./models/usermongo')
 
 /**
- * Get port from environment and store in Express.
+ * Get port from environment or config file and store in Express.
  */
-
 var port = normalizePort(config.webPort || process.env.PORT || '3000');
 app.set('port', port);
 

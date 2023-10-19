@@ -1,26 +1,22 @@
-
-
+//
+// NOTE: normally would not store passwords in the repo, so we include this 'init' file
+// as a template. For public deployments, you will want to install the config.js and
+// initialDb.js file using a secure mechanism that does not use the repo.
+//
 let config = {
 
   logLocation: './logs',
 
   mongoDbEndpoint: {
     development: "mongodb://localhost:27017/cryyptor",
-    test: "mongodb://localhost/cryyptor-test"
+    test: "mongodb://localhost/cryyptor-test",
+    production: "mongodb://localhost:27017/cryyptor-prod",
   }[process.env.NODE_ENV],
 
   redis: {
     host: "localhost",
     port: 6379
   },
-
-  postgres: {
-    host: "localhost",
-    port: 6379
-    user: "postgres",
-    pass: "postgres",
-    db: "tor-bot"
-  }
 
   webPort: 4000,
   socketPort: 4001,

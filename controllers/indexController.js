@@ -6,7 +6,7 @@ module.exports.indexController = function(req, res, next) {
   res.render('index',
       {
         title: strings.getString("site-title") ,
-        user: req.user.first_name,
+        user: req.session.user.first_name,
         socketPort: config.socketPort
       }
   );

@@ -1,41 +1,70 @@
+# node-mongo-template
 
-## Setup
+This is a simple webapp using express.js and MongoDb and having websocket
+capability. The front-end is built using a simple bootstrap template and jquery.
 
-## node
+It is intended as a template for projects that don't require complex ui. It that has 
+been very useful to me for getting small projects up quickly.
 
-tool versions on osx:
+The web app demonstrates a simple chat client.
+
+# Setup
+
+## node install
+
+tested with tool versions on osx:
 nvm 0.39.2
 node v18.12.0
-npm 9.1.3
+npm 9.6.6
 
-### web app
+### install web app
+Clone this repository. From the project root folder, run
 
 `npm install`
 
-initialize database in dev
+#### update app config files
+create a copy of ./config/config.js.init and call it ./db/config.js
+set the mongoDbEndpoint database names for your environments
 
-`node ./db/dbreset.js`
+create a copy of ./db/initialDb.js.init and call it ./db/initialDb.js
+create your seed user accounts in the initialDb.initialUsers function of that file
+Note that you will want to create 2 users to play with the chat function
 
+#### initialize database in dev
+
+`node ./db/dbreset.js` or `npm dbinit`
+
+### run
+`npm start`
+
+## TODO
+* code cleanup
+* cleanup logger
+* fix left side bar placement
+* add username to chat output
+* reformat chat div
+* add video (webrtc, stun/turn, etc)
+
+## Additional Info
 ### ssl cert generation
 
-openssl req -new -newkey rsa:2048 -nodes -keyout wildcard-johnfowler.key -out wildcard-johnfowler.csr
-
+openssl req -new -newkey rsa:2048 -nodes -keyout wildcard-keyname.key -out wildcard-keyname.csr
 
 ### ssl cert installation
 
 Namecheap sends zip containing cert and associated chain certs. These need to be concatentated into a single file (file order is important)
 
-cat __johnfowler_dev.crt __johnfowler_dev.ca-bundle >> __johnfowler_dev_cert_chain.crt
+cat __keyname_dev.crt __keyname_dev.ca-bundle >> __keyname_dev_cert_chain.crt
 
 Use the cert chain file and .key created when the .csr was generated and place them in the ssl certs folder for the web server (/etc/ssl for our usual nginx configuration)
 
 Place reference in the nginx config for those servers using ssl.
 
-
 ###  check ssl expiration
 
 openssl x509 -enddate -noout -in certificate.crt
 
+## Archive
 ### express generator output
 
 ``vmax:nodeapp john$ express --ejs --view ejs --git

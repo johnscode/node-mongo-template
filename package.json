@@ -3,7 +3,8 @@
   "version": "0.0.1",
   "private": true,
   "scripts": {
-    "start": "node ./server.js"
+    "start": "node main.js",
+    "dbinit": "node ./db/dbreset.js"
   },
   "dependencies": {
     "bcrypt": "^5.1.0",
@@ -20,6 +21,9 @@
     "mongoose": "^6.7.0",
     "morgan": "~1.9.1",
     "path": "^0.12.7",
+    "pg": "^8.8.0",
+    "pg-hstore": "^2.3.4",
+    "sequelize": "^6.26.0",
     "serve-favicon": "^2.5.0",
     "uuid": "^9.0.0",
     "winston": "^3.8.2",

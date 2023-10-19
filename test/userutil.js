@@ -1,7 +1,7 @@
 /**
  * Useful helper functions for testing
  */
-const User = require('../models/user');
+const User = require('../models/usermongo');
 const logger = require('./test-logger');
 const async = require('async');
 const request = require('supertest');
@@ -65,36 +65,5 @@ userUtil.resetUsers = async () => {
   await deleteUsersFunc();
   await initUsersFunc();
 }
-
-var loginFunc = function(app,username,pass,callback) {
-  var body={};
-  request(app)
-      .post('/v1/auth/local?auth=true')
-      .send({ username: username, password: pass })
-      .set('Accept', 'application/json')
-      .expect('Content-Type', /json/)
-      .expect(200)
-      .end(function(err,resp){
-//  	logger.info("api result: "+JSON.stringify(resp));
-        if (err) {
-          callback(err,null);
-        }
-        if (resp && resp.text) {
-          var json = JSON.parse(resp.text);
-          logger.info("api result: "+JSON.stringify(json));
-//  		assert.ok(json,'unparsable json result');
-//  		assert.ok(json.api_auth_token,'no auth token in response');
-//  		assert.ok(json.user,'no user in response');
-          body=json;
-          callback(null,json.user.authToken,json.user);
-        } else {
-          assert.ok(false,'no response json for login');
-//  		callback({error:{message:'http error:',code:response.statusCode}},null);
-        }
-      });
-
-}
-
-userUtil.login = loginFunc;
 
 module.exports=userUtil;

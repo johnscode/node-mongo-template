@@ -61,3 +61,8 @@ typings/
 .next
 
 /.idea/
+/*.iml
+/package-lock.json
+/config/config.js
+/bin/www
+/db/initialDb.js
