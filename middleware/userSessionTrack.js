@@ -10,18 +10,20 @@ userSessionTrack.findSessionUser = async (req, res, next) => {
   sessionParser.parse(req);
   req.user=null
   logger.info(`user agent: ${req.useragent.browser}`)
+  
   // TODO cleanup
   // shim for dev work to bypass auth by forcing users
-  // if (req.useragent.browser.match(/safari/gi)) {
-  //   logger.info(`safari`);
-  //   req.user = await User.findByUsername('johnscode');
-  //   req.session.user = req.user
-  // } else if (req.useragent.browser.match(/firefox/gi)||req.useragent.browser.match(/chrome/gi)) {
-  //   logger.info(`${req.useragent.browser}`);
-  //   req.user = await User.findByUsername('god');
-  //   req.session.user = req.user
-  // }
+  if (req.useragent.browser.match(/safari/gi)) {
+    logger.info(`safari`);
+    req.user = await User.findByUsername('johnscode');
+    req.session.user = req.user
+  } else if (req.useragent.browser.match(/firefox/gi)||req.useragent.browser.match(/chrome/gi)) {
+    logger.info(`${req.useragent.browser}`);
+    req.user = await User.findByUsername('god');
+    req.session.user = req.user
+  }
   // end dev shim
+
   logger.info(`session: ${JSON.stringify(req.session)}`)
   if (req.session && req.session.user) {
     // there is an existing session
