@@ -1,0 +1,34 @@
+
+
+let config = {
+
+  logLocation: './logs',
+
+  mongoDbEndpoint: {
+    development: "mongodb://localhost:27017/cryyptor",
+    test: "mongodb://localhost/cryyptor-test"
+  }[process.env.NODE_ENV],
+
+  redis: {
+    host: "localhost",
+    port: 6379
+  },
+
+  postgres: {
+    host: "localhost",
+    port: 6379
+    user: "postgres",
+    pass: "postgres",
+    db: "tor-bot"
+  }
+
+  webPort: 4000,
+  socketPort: 4001,
+
+}
+
+
+
+
+
+module.exports = config;

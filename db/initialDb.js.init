@@ -1,0 +1,28 @@
+//
+// NOTE: normally would not store passwords in the repo, so we include this 'init' file
+// as a template. For public deployments, you will want to install the config.js and
+// initialDb.js file using a secure mechanism that does not use the repo.
+//
+const logger = require('../logger');
+
+const User = require('../models/usermongo);
+
+const initialDb = {};
+
+initialDb.userDict = {};
+initialDb.roomDict = {};
+
+initialDb.initialUsers = () => {
+  return [
+    new User({
+      first_name: 'admin',
+      last_name: 'admin',
+      username: 'admin',
+      email: 'admin@test.com',
+      apikey: '',
+      encryptedPass: 'somepass'   // see  preSave method in ../models/user.js, it encrypts pass before db insert
+    }),
+  ];
+}
+
+module.exports=initialDb;

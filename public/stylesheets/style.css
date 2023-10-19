@@ -1,0 +1,27 @@
+body {
+  padding: 50px;
+  font: 14px "Lucida Grande", Helvetica, Arial, sans-serif; }
+
+a {
+  color: #00B7FF; }
+
+.user-item {
+  color: #ced4da; }
+
+.admin-form-error {
+  border: #b34836;
+  border-width: 2px;
+  border-style: solid; }
+
+.admin-form-valid {
+  border: none; }
+
+.admin-error-text {
+  color: #b34836;
+  font-style: italic;
+  margin-bottom: 0px; }
+
+#mine-mapid {
+  height: 320px; }
+
+/*# sourceMappingURL=style.css.map */

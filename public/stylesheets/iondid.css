@@ -1,0 +1,12 @@
+
+.clearfix::after {
+    content: "";
+    clear: both;
+    display: table;
+}
+
+.topnav-title {
+    padding-top: 20px;
+    display: inline-block;
+    color: rgb(230, 238, 240);
+}

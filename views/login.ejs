@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+  <head>
+      <meta charset="utf-8" />
+    <title><%= title %></title>
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <meta content="a page" name="description" />
+      <meta content="nunya" name="author" />
+    <link rel='stylesheet' href='/stylesheets/style.css' />
+      <link rel="shortcut icon" href="/images/favicon.png">
+      <link href="/stylesheets/iondid.css" rel="stylesheet" type="text/css" />
+      <link href="/stylesheets/icons.min.css" rel="stylesheet" type="text/css" />
+      <link href="/stylesheets/app-modern.min.css" rel="stylesheet" type="text/css" id="light-style" />
+      <link href="/stylesheets/app-modern-dark.min.css" rel="stylesheet" type="text/css" id="dark-style" />
+      <script src="/javascripts/vendor.min.js"></script>
+      <script type="text/javascript">
+        const ws = new WebSocket(`ws://localhost:<%= socketPort %>`);
+
+        // Browser WebSockets have slightly different syntax than `ws`.
+        // Instead of EventEmitter syntax `on('open')`, you assign a callback
+        // to the `onopen` property.
+        ws.onopen = function() {
+          document.querySelector('#send').disabled = false;
+          document.querySelector('#command').disabled = false;
+
+          document.querySelector('#send').addEventListener('click', function() {
+            const msg = `{"type":"message", "message": "${document.querySelector('#message').value}"}`
+            ws.send(msg);
+          });
+          document.querySelector('#command').addEventListener('click', function() {
+            const msg = `{"type":"command", "command": "${document.querySelector('#message').value}"}`
+            ws.send(msg);
+          });
+        };
+
+        ws.onmessage = function(msg) {
+          console.log("fidggliadg")
+          const msgObj = JSON.parse(msg.data)
+          console.log(`incoming ${msg.data}`)
+          document.querySelector('#messages').innerHTML += `<div>${msg.data}</div>`;
+          switch (msgObj.type) {
+            case "message":
+              console.log(`message received: ${msgObj.message}`);
+              break;
+            case "command":
+              console.log(`command received: ${msgObj.command}`);
+              break;
+          }
+        };
+      </script>
+  </head>
+  <body class="" data-layout="detached" data-layout-config='{"leftSidebarCondensed":false,"darkMode":true, "showRightSidebarOnStart": false}'>
+    <%- include("partials/topbar") %>
+    <!-- Start Content-->
+    <div class="container-fluid">
+
+        <!-- Begin page -->
+        <div class="wrapper">
+
+            <%- include("partials/leftbar") %>
+
+            <div class="content-page">
+                <div class="content">
+                    <h1><%= title %></h1>
+                    <p>Welcome to <%= title %></p>
+                </div> <!-- end content -->
+                <div>
+                    <h1>Chat</h1>
+                    <div>
+                        <input id="message" placeholder="Message">
+                        <button id="send" disabled="true">Send</button>
+                        <input type="button" id="command" disabled="true" value="Send cmd"></input>
+                    </div>
+                    <div id="messages">
+                    </div>
+                </div>
+                <div>
+                </div>
+                <%- include("partials/footer") %>
+            </div> <!-- content-page -->
+        </div> <!-- end wrapper-->
+    </div>
+    <!-- END Container -->
+
+    <script src="/javascripts/app.min.js"></script>
+    <script src="/javascripts/d3.min.js"></script>
+  </body>
+</html>
